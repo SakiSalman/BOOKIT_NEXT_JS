@@ -9,17 +9,58 @@ import createError from "@/utility/createError";
  * @purpose GET ALL ROOMS
  * @method GET
  */
-const allRoom = catchAsyncErrors (async(req, res, next) => {
-  const apiFeatures = new APIFeatures(Rooms.find(), req.query).search().filter()
+// const allRoom = async (req, res) => {
+
+  
+//     const resPerPage = 4;
+
+//   const roomsCount = await Rooms.countDocuments();
+
+//   let apiFeatures = new APIFeatures(Rooms.find(), req.query)
+//       .search()
+//       .filter()
+
+  
+//       let rooms = await apiFeatures.query;
+//       apiFeatures.pagination(resPerPage)
+      
+//   // let filteredRoomsCount = rooms.length;
+
+//   console.log(rooms);
+  
+//   res.status(200).json({
+//       success: true,
+//       roomsCount,
+//       resPerPage,
+//       // filteredRoomsCount,
+//       rooms
+//   })
   
 
-  const rooms = await apiFeatures.query
-    return res.status(200).json({
+// }
+const allRoom = catchAsyncErrors(async (req, res) => {
+
+  const resPerPage = 4;
+
+  const roomsCount = await Rooms.countDocuments();
+
+  const apiFeatures = new APIFeatures(Rooms.find(), req.query)
+      .search()
+      .filter()
+
+  apiFeatures.pagination(resPerPage)
+  var rooms = await apiFeatures.query;
+  let filteredRoomsCount = rooms.length;
+
+  res.status(200).json({
       success: true,
-      count: rooms.length,
-      rooms: rooms,
-    });
-});
+      roomsCount,
+      resPerPage,
+      filteredRoomsCount,
+      rooms
+  })
+
+})
 /**
  *
  * @api /api/rooms
