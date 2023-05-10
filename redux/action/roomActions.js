@@ -5,7 +5,7 @@ import absolutUrl from 'next-absolute-url'
 
 // GET ALL ROOMS
 
-export const getRooms = (req) => async (dispatch) =>{
+export const getRooms = (req) => async (dispatch) => {
     try {
         const {origin} = absolutUrl(req)
       const {data} =  await axios.get( `${origin}/api/rooms`)
@@ -16,7 +16,7 @@ export const getRooms = (req) => async (dispatch) =>{
     } catch (error) {
         dispatch({
             type : ALL_ROOMS_FAILDED,
-            payload : console.error.response.data.message
+            payload : null
         })
     }
 }

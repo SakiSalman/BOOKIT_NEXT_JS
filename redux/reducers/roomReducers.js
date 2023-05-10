@@ -4,7 +4,7 @@ import { ALL_ROOMS_SUCCESS, ALL_ROOMS_FAILDED , CLEAR_ERROR} from "../types/room
 
 // all room reducers
 
-export const allRoomsReducer = (state = {rooms : []}, {type, action}) => {
+export const allRoomsReducer = (state = {rooms : []}, {type, payload}) => {
 
     switch (type) {
         case ALL_ROOMS_SUCCESS:

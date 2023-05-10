@@ -1,43 +1,33 @@
-import {createStore, applyMiddleware} from 'redux'
-import reducers from './reducers/reducer'
-import { HYDRATE, createWrapper } from 'next-redux-wrapper'
-import { thunkMiddleware } from 'redux-thunk'
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reducers/reducer';
+import { HYDRATE, createWrapper } from 'next-redux-wrapper';
+import thunkMiddleware from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
+// Bind ALL the middleware based on project mode
+const bindMiddleware = (middleware) => {
+  if (process.env.NODE_ENV != 'production') {
+    return composeWithDevTools(applyMiddleware(...middleware));
+  }
+  return applyMiddleware(...middleware);
+};
 
-// Bind ALL the middle ware based on Project mode 
-const bindMiddleWare = (middleware) => {
+// Init reducers
+const reducer = (state, { type, payload }) => {
+  if (type === HYDRATE) {
+    const nextState = {
+      ...state,
+      ...payload,
+    };
+    return nextState;
+  } else {
+    return reducers(state, { type, payload });
+  }
+};
 
-    if (process.env.NODE_ENV != 'production') {
-        
-        const {composeWithDevTools} = require('redux-devtools-extension')
-
-        return composeWithDevTools(applyMiddleware(...middleware))
-    }
-
-    return applyMiddleware(...middleware)
-}
-
-// init reducers
-const reducer = (state, {type, payload}) => {
-
-    if (type == HYDRATE) {
-
-        const nextState = {
-            ...state,
-            ...payload
-        }
-
-        return nextState
-        
-    }else{
-        reducers(state, action)
-    }
-
-}
-
-// initialize store
+// Initialize store
 const initStore = () => {
-    return createStore(reducer, bindMiddleWare([thunkMiddleware]))
-}
+  return createStore(reducer, bindMiddleware([thunkMiddleware]));
+};
 
-export const wrapper = createWrapper(initStore)
+export const wrapper = createWrapper(initStore);
